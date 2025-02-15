@@ -3,13 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Contact - Sumba Island</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        header {
+            width: 100%;
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+            width: 100%;
+            padding: 10px 0;
+        }
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .content {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .content h2 {
+            font-size: 2.5em;
+            color: #8B4513;
+            font-family: 'Georgia', serif;
+            margin-bottom: 20px;
+        }
+        .contact-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .contact-buttons a {
+            text-decoration: none;
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .contact-buttons a:hover {
+            transform: scale(1.05);
+        }
+        .contact-buttons img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        .emergency-number {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333;
+            color: #fff;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .contact-buttons a {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="contact-links">
-            <a href="mailto:sumhelp24@gmail.com">
+    <header>
+        <h1>All about Sumba Island</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="tourism.html">Tourism</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    <div class="content">
+        <h2>Hubungi Kami</h2>
+        
+        <div class="contact-buttons">
+            <a href="https://wa.me/+6281237611611" target="_blank">
+                <img src="images/wa.jpg" alt="WhatsApp">
+            </a>
+            
+            <a href="mailto:aplirambu1@gmail.com" target="_blank">
                 <img src="images/gmail.jpg" alt="Gmail">
             </a>
             
@@ -17,7 +136,7 @@
                 <img src="images/tlg.jpg" alt="Telegram">
             </a>
             
-            <a href="#" onclick="getLocation(); return false;">
+            <a href="#" onclick="getLocation()">
                 <img src="images/polis.jpg" alt="Call Police">
             </a>
         </div>
@@ -26,32 +145,17 @@
         <div class="emergency-number" id="emergencyNumber"></div>
     </div>
     <footer>
-        <p>&copy; 2025 Sumba-island. All rights reserved.</p>
+         <p>&copy; 2025 Sumba-island. All rights reserved.</p>
     </footer>
 
-    <!-- PERBAIKAN 1: Tambahkan callback dan error handling untuk Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsTaQOJoCMRHz7lIw8bBOWZQLflmeVBVo&callback=initMap&loading=async" async defer></script>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsTaQOJoCMRHz7lIw8bBOWZQLflmeVBVo"></script>
     <script>
         let map;
         let marker;
 
-        // PERBAIKAN 2: Tambahkan fungsi initMap untuk inisialisasi dasar
-        function initMap() {
-            // Inisialisasi peta dengan koordinat default
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -9.6500, lng: 120.2667 }, // Koordinat default Sumba
-                zoom: 8
-            });
-        }
-
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    showPosition,
-                    showError,
-                    { timeout: 10000 } // PERBAIKAN 3: Tambahkan timeout
-                );
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
                 alert("Geolocation tidak didukung oleh browser ini.");
             }
@@ -61,51 +165,23 @@
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
-            // PERBAIKAN 4: Pastikan peta sudah terinisialisasi
-            if (!map) initMap();
-
-            // Update viewport ke lokasi pengguna
-            map.setCenter({ lat, lng });
-            map.setZoom(15);
-
-            // Hapus marker lama jika ada
-            if (marker) marker.setMap(null);
-            
-            // Buat marker baru
-            marker = new google.maps.Marker({
-                position: { lat, lng },
-                map: map,
-                title: "Lokasi Anda"
-            });
-
-            // PERBAIKAN 5: Gunakan textContent untuk keamanan
-            const emergencyNumber = "+6281337116321";
-            document.getElementById('emergencyNumber').textContent = 
-                `Nomor Darurat Terdekat: ${emergencyNumber}`;
-        }
-
-        function showError(error) {
-            // PERBAIKAN 6: Tambahkan error handling spesifik
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("Izin lokasi ditolak. Aktifkan izin lokasi untuk melanjutkan.");
-                    break;
-                case error.TIMEOUT:
-                    alert("Permintaan lokasi melebihi batas waktu.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Informasi lokasi tidak tersedia.");
-                    break;
-                default:
-                    alert("Terjadi kesalahan saat mengambil lokasi.");
+            // Inisialisasi peta jika belum ada
+            if (!map) {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat, lng },
+                    zoom: 15
+                });
+            } else {
+                map.setCenter({ lat, lng });
             }
-        }
 
-        // PERBAIKAN 7: Handle error Google Maps API
-        window.gm_authFailure = function() {
-            alert("Gagal memuat Google Maps. Periksa koneksi internet atau API Key.");
-        };
-    </script>
-</body>
-</html>
-        
+            // Update atau buat marker
+            if (marker) {
+                marker.setPosition({ lat, lng });
+            } else {
+                marker = new google.maps.Marker({
+                    position: { lat, lng },
+                    map: map,
+                    title: "Lokasi Anda"
+                });
+        }
